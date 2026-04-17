@@ -41,7 +41,7 @@ export default function App() {
 
   const handleOpen = useCallback(
     (slug: string) => {
-      playOpen();
+      playOpen(slug);
       setActiveSlug(slug);
     },
     [playOpen],
@@ -78,7 +78,7 @@ export default function App() {
         </button>
       </header>
 
-      <CardGrid members={team} onOpen={handleOpen} onHoverSound={playHover} />
+      <CardGrid members={team} onOpen={handleOpen} onHoverSound={(slug) => playHover(slug)} />
 
       <AnimatePresence>
         {activeMember && (

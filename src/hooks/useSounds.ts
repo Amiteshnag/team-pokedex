@@ -44,6 +44,102 @@ function chimeClose() {
   setTimeout(() => playTone(550, 0.18, 'square', 0.07), 70);
 }
 
+// ── Shadow Monarch sounds (Barun's card) ──────────────────────────────────────
+
+function shadowOpen() {
+  const ac = getCtx();
+  const now = ac.currentTime;
+
+  // Layer 1 — deep bass surge, the void awakening
+  const bass = ac.createOscillator();
+  const bassGain = ac.createGain();
+  bass.type = 'sine';
+  bass.frequency.setValueAtTime(48, now);
+  bass.frequency.exponentialRampToValueAtTime(38, now + 1.0);
+  bassGain.gain.setValueAtTime(0, now);
+  bassGain.gain.linearRampToValueAtTime(0.22, now + 0.12);
+  bassGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+  bass.connect(bassGain).connect(ac.destination);
+  bass.start(now);
+  bass.stop(now + 1.0);
+
+  // Layer 2 — eerie descending sawtooth (portal tearing open)
+  const tear = ac.createOscillator();
+  const tearGain = ac.createGain();
+  tear.type = 'sawtooth';
+  tear.frequency.setValueAtTime(260, now + 0.06);
+  tear.frequency.exponentialRampToValueAtTime(100, now + 0.65);
+  tearGain.gain.setValueAtTime(0.07, now + 0.06);
+  tearGain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+  tear.connect(tearGain).connect(ac.destination);
+  tear.start(now + 0.06);
+  tear.stop(now + 0.7);
+
+  // Layer 3 — dark lower harmonic (shadow echo)
+  const echo = ac.createOscillator();
+  const echoGain = ac.createGain();
+  echo.type = 'sawtooth';
+  echo.frequency.setValueAtTime(130, now + 0.12);
+  echo.frequency.exponentialRampToValueAtTime(52, now + 0.65);
+  echoGain.gain.setValueAtTime(0.04, now + 0.12);
+  echoGain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+  echo.connect(echoGain).connect(ac.destination);
+  echo.start(now + 0.12);
+  echo.stop(now + 0.7);
+
+  // Layer 4 — ethereal high shimmer (stars forging)
+  const star = ac.createOscillator();
+  const starGain = ac.createGain();
+  star.type = 'sine';
+  star.frequency.setValueAtTime(2400, now + 0.35);
+  star.frequency.exponentialRampToValueAtTime(1600, now + 0.85);
+  starGain.gain.setValueAtTime(0.03, now + 0.35);
+  starGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+  star.connect(starGain).connect(ac.destination);
+  star.start(now + 0.35);
+  star.stop(now + 0.85);
+
+  // Layer 5 — second gold shimmer pulse (constellation locking in)
+  const spark = ac.createOscillator();
+  const sparkGain = ac.createGain();
+  spark.type = 'sine';
+  spark.frequency.setValueAtTime(3200, now + 0.55);
+  spark.frequency.exponentialRampToValueAtTime(2000, now + 0.9);
+  sparkGain.gain.setValueAtTime(0.02, now + 0.55);
+  sparkGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+  spark.connect(sparkGain).connect(ac.destination);
+  spark.start(now + 0.55);
+  spark.stop(now + 0.9);
+}
+
+function shadowHover() {
+  const ac = getCtx();
+  const now = ac.currentTime;
+
+  // Faint low pulse — something stirs in the dark
+  const pulse = ac.createOscillator();
+  const pulseGain = ac.createGain();
+  pulse.type = 'sine';
+  pulse.frequency.setValueAtTime(80, now);
+  pulseGain.gain.setValueAtTime(0.05, now);
+  pulseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+  pulse.connect(pulseGain).connect(ac.destination);
+  pulse.start(now);
+  pulse.stop(now + 0.25);
+
+  // Faint high whisper
+  const whisper = ac.createOscillator();
+  const whisperGain = ac.createGain();
+  whisper.type = 'sine';
+  whisper.frequency.setValueAtTime(1400, now + 0.05);
+  whisper.frequency.exponentialRampToValueAtTime(1000, now + 0.2);
+  whisperGain.gain.setValueAtTime(0.02, now + 0.05);
+  whisperGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+  whisper.connect(whisperGain).connect(ac.destination);
+  whisper.start(now + 0.05);
+  whisper.stop(now + 0.22);
+}
+
 // ── Chiptune BGM ──────────────────────────────────────────────────────────────
 
 // Pokemon town-inspired looping melody — [frequency_hz, duration_sec], 0 = rest
@@ -119,19 +215,21 @@ export function useSounds() {
   const [muted, setMuted] = useState(false);
   const lastHover = useRef(0);
 
-  const playHover = useCallback(() => {
+  const playHover = useCallback((slug?: string) => {
     bgm.startOnce();
     if (muted || prefersReducedMotion()) return;
     const now = Date.now();
     if (now - lastHover.current < 150) return;
     lastHover.current = now;
-    shimmer();
+    if (slug === 'barun') shadowHover();
+    else shimmer();
   }, [muted]);
 
-  const playOpen = useCallback(() => {
+  const playOpen = useCallback((slug?: string) => {
     bgm.startOnce();
     if (muted || prefersReducedMotion()) return;
-    chimeOpen();
+    if (slug === 'barun') shadowOpen();
+    else chimeOpen();
   }, [muted]);
 
   const playClose = useCallback(() => {

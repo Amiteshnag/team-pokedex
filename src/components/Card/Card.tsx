@@ -7,7 +7,7 @@ import styles from './Card.module.css';
 interface CardProps {
   member: TeamMember;
   onOpen: (slug: string) => void;
-  onHoverSound?: () => void;
+  onHoverSound?: (slug: string) => void;
 }
 
 export function Card({ member, onOpen, onHoverSound }: CardProps) {
@@ -65,7 +65,7 @@ export function Card({ member, onOpen, onHoverSound }: CardProps) {
         className={styles.card}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onMouseEnter={onHoverSound}
+        onMouseEnter={() => onHoverSound?.(member.slug)}
       >
         <div className={styles.frame}>
           <div className={styles.topRow}>
