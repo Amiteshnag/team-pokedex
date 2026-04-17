@@ -8,12 +8,19 @@ interface CardProps {
   member: TeamMember;
   onOpen: (slug: string) => void;
   onHoverSound?: (slug: string) => void;
+  onAvatarHoverChange?: (hovered: boolean) => void;
+  disableTrippy?: boolean;
 }
 
-export function Card({ member, onOpen, onHoverSound }: CardProps) {
+export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disableTrippy }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+  const hoverVideoRef = useRef<HTMLVideoElement>(null);
   const [avatarFailed, setAvatarFailed] = useState(false);
+  const [trippy, setTrippy] = useState(false);
+  const [avatarHovered, setAvatarHovered] = useState(false);
+  const [hp, setHp] = useState(member.hp);
+  const hpIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const el = cardRef.current;
@@ -44,6 +51,29 @@ export function Card({ member, onOpen, onHoverSound }: CardProps) {
     el.style.setProperty('--ry', '0');
   }, []);
 
+  const handleAvatarEnter = useCallback(() => {
+    if (member.slug !== 'amitesh') return;
+    if (!disableTrippy) setTrippy(true);
+    setAvatarHovered(true);
+    onAvatarHoverChange?.(true);
+    const vid = hoverVideoRef.current;
+    if (vid) { vid.currentTime = 0; vid.play().catch(() => {}); }
+    if (member.slug === 'amitesh') {
+      hpIntervalRef.current = setInterval(() => setHp(v => v + 1), 80);
+    }
+  }, [member.slug, disableTrippy, onAvatarHoverChange]);
+
+  const handleAvatarLeave = useCallback(() => {
+    if (member.slug !== 'amitesh') return;
+    if (!disableTrippy) setTrippy(false);
+    setAvatarHovered(false);
+    onAvatarHoverChange?.(false);
+    const vid = hoverVideoRef.current;
+    if (vid) { vid.pause(); vid.currentTime = 0; }
+    if (hpIntervalRef.current) { clearInterval(hpIntervalRef.current); hpIntervalRef.current = null; }
+    setHp(member.hp);
+  }, [member.slug, disableTrippy, onAvatarHoverChange]);
+
   const initials = member.name
     .split(' ')
     .map((s) => s[0])
@@ -54,28 +84,36 @@ export function Card({ member, onOpen, onHoverSound }: CardProps) {
   return (
     <motion.button
       layoutId={`card-${member.slug}`}
-      className={styles.cardWrap}
+      className={`${styles.cardWrap} ${trippy ? styles.trippyWrap : ''}`}
       data-type={member.type}
+      data-slug={member.slug}
       onClick={() => onOpen(member.slug)}
       aria-label={`Open ${member.name}'s card`}
       whileTap={{ scale: 0.97 }}
     >
       <div
         ref={cardRef}
-        className={styles.card}
+        className={`${styles.card} ${trippy ? styles.trippyCard : ''}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseEnter={() => onHoverSound?.(member.slug)}
       >
+        {trippy && <div className={styles.trippyOverlay} />}
+        {trippy && <div className={styles.grainOverlay} />}
+
         <div className={styles.frame}>
           <div className={styles.topRow}>
             <span className={styles.name}>{member.name}</span>
             <span className={styles.hp}>
-              HP<span className={styles.hpValue}>{member.hp}</span>
+              HP<span className={styles.hpValue}>{hp}</span>
             </span>
           </div>
 
-          <div className={styles.avatarFrame}>
+          <div
+            className={styles.avatarFrame}
+            onMouseEnter={handleAvatarEnter}
+            onMouseLeave={handleAvatarLeave}
+          >
             <span className={styles.typeBadge}>{TYPE_LABELS[member.type]}</span>
             {avatarFailed ? (
               <div className={styles.avatarPlaceholder}>{initials}</div>
@@ -83,9 +121,19 @@ export function Card({ member, onOpen, onHoverSound }: CardProps) {
               <img
                 src={member.avatar}
                 alt={member.name}
-                className={styles.avatar}
+                className={`${styles.avatar} ${avatarHovered ? styles.avatarHidden : ''}`}
                 onError={() => setAvatarFailed(true)}
                 loading="lazy"
+              />
+            )}
+            {member.slug === 'amitesh' && (
+              <video
+                ref={hoverVideoRef}
+                src="/hover.mp4"
+                loop
+                muted
+                playsInline
+                className={`${styles.hoverVideo} ${avatarHovered ? styles.hoverVideoVisible : ''}`}
               />
             )}
           </div>

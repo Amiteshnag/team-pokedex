@@ -154,6 +154,26 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: opacity 0.2s ease;
+}
+
+.avatarHidden {
+  opacity: 0;
+}
+
+.hoverVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.hoverVideoVisible {
+  opacity: 1;
 }
 
 .avatarPlaceholder {
@@ -311,4 +331,266 @@
     animation: none !important;
     opacity: 0.3 !important;
   }
+}
+
+/* Holographic Goth — Amitesh */
+:global([data-slug='amitesh']) .card {
+  background: linear-gradient(145deg, #0a0000, #1a0000, #0d0000);
+  box-shadow:
+    0 0 0 2px rgba(200, 0, 0, 0.2) inset,
+    0 20px 60px -20px rgba(0, 0, 0, 0.95),
+    0 0 60px -10px rgba(180, 0, 0, 0.5);
+}
+
+:global([data-slug='amitesh']) .card::before {
+  background: conic-gradient(
+    from calc(var(--mx, 50) * 1deg) at 50% 50%,
+    #ff0000 0%,
+    #1a0000 12%,
+    #cc0000 25%,
+    #0a0000 37%,
+    #ff2200 50%,
+    #1a0000 62%,
+    #bb0000 75%,
+    #0d0000 87%,
+    #ff0000 100%
+  );
+  filter: saturate(2.5) brightness(0.9);
+  opacity: 0.45;
+  animation: gothShimmer 6s linear infinite;
+}
+
+:global([data-slug='amitesh']:hover) .card::before {
+  opacity: 0.85;
+}
+
+:global([data-slug='amitesh']) .card::after {
+  background: radial-gradient(
+    circle at calc(var(--mx, 50) * 1%) calc(var(--my, 50) * 1%),
+    rgba(255, 50, 0, 0.25),
+    transparent 45%
+  );
+}
+
+:global([data-slug='amitesh']) .frame {
+  background: linear-gradient(180deg, rgba(10, 0, 0, 0.2), rgba(10, 0, 0, 0.8));
+  border: 1px solid rgba(200, 0, 0, 0.3);
+  animation: glitchFrame 5s infinite;
+  overflow: hidden;
+}
+
+:global([data-slug='amitesh']) .frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(200, 0, 0, 0.03) 2px,
+    rgba(200, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+  animation: scanlines 8s linear infinite;
+}
+
+:global([data-slug='amitesh']) .frame::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    rgba(255, 0, 0, 0.6) 0%,
+    rgba(255, 60, 0, 0.9) 70%,
+    rgba(255, 160, 60, 1) 85%,
+    rgba(255, 220, 120, 1) 100%
+  );
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.7), 0 0 14px rgba(255, 60, 0, 0.4);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+  z-index: 11;
+}
+
+:global([data-slug='amitesh']) .avatarFrame {
+  border-color: rgba(200, 0, 0, 0.6);
+  box-shadow:
+    inset 0 0 24px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(180, 0, 0, 0.4);
+  background: linear-gradient(135deg, rgba(80, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+}
+
+:global([data-slug='amitesh']) .typeBadge {
+  background: rgba(20, 0, 0, 0.9);
+  border-color: rgba(200, 0, 0, 0.6);
+  color: #ff4444;
+  text-shadow: 0 0 8px rgba(200, 0, 0, 0.9);
+}
+
+:global([data-slug='amitesh']) .name {
+  color: #ffaaaa;
+  text-shadow: 0 0 12px rgba(200, 0, 0, 0.8);
+}
+
+:global([data-slug='amitesh']) .hp {
+  color: #ff4444;
+}
+
+:global([data-slug='amitesh']) .role {
+  color: rgba(255, 120, 120, 0.9);
+  border-top-color: rgba(200, 0, 0, 0.25);
+  border-bottom-color: rgba(200, 0, 0, 0.25);
+  letter-spacing: 0.12em;
+}
+
+:global([data-slug='amitesh']) .stat {
+  color: rgba(255, 160, 160, 0.9);
+}
+
+:global([data-slug='amitesh']) .statValue {
+  color: #ff6666;
+  text-shadow: 0 0 6px rgba(200, 0, 0, 0.7);
+}
+
+:global([data-slug='amitesh']) .flavor {
+  color: rgba(255, 120, 120, 0.7);
+  border-top-color: rgba(200, 0, 0, 0.2);
+}
+
+@keyframes gothShimmer {
+  from { --mx: 0; }
+  to { --mx: 360; }
+}
+
+@keyframes scanline {
+  0%   { top: -2%; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 102%; opacity: 0; }
+}
+
+@keyframes scanlines {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+
+@keyframes glitchFrame {
+  0%, 90%, 100% { border-color: rgba(200, 0, 0, 0.3); transform: none; }
+  91%  { transform: translate(-2px, 1px); border-color: rgba(255, 0, 0, 0.7); }
+  92%  { transform: translate(2px, -1px); border-color: rgba(100, 0, 0, 0.5); }
+  93%  { transform: translate(-1px, 2px); border-color: rgba(255, 50, 0, 0.8); }
+  94%  { transform: none; border-color: rgba(200, 0, 0, 0.3); }
+  96%  { transform: translate(3px, 0); border-color: rgba(255, 0, 0, 0.6); }
+  97%  { transform: none; }
+}
+
+/* Trippy hover effect — overlay sits below frame (z-index 1 < frame z-index 2) so avatar is unaffected */
+.trippyOverlay {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255,0,128,0.5),
+    rgba(255,200,0,0.5),
+    rgba(0,255,128,0.5),
+    rgba(0,200,255,0.5),
+    rgba(128,0,255,0.5),
+    rgba(255,0,128,0.5)
+  );
+  mix-blend-mode: screen;
+  animation: trippyRotate 0.5s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: var(--radius-card);
+}
+
+/* Grain overlay — z-index 1, sits below frame (z-index 2), avatar blocks it naturally */
+.grainOverlay {
+  position: absolute;
+  inset: -80px;
+  width: calc(100% + 160px);
+  height: calc(100% + 160px);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+  animation: grainAnim 0.1s steps(1) infinite;
+}
+
+@keyframes grainAnim {
+  0%   { transform: translate(0,    0); }
+  10%  { transform: translate(-6%,  -12%); }
+  20%  { transform: translate(-18%, 6%); }
+  30%  { transform: translate(8%,   -28%); }
+  40%  { transform: translate(-4%,  22%); }
+  50%  { transform: translate(-16%, 12%); }
+  60%  { transform: translate(18%,  -4%); }
+  70%  { transform: translate(2%,   18%); }
+  80%  { transform: translate(4%,   -20%); }
+  90%  { transform: translate(-12%, 8%); }
+  100% { transform: translate(6%,   4%); }
+}
+
+/* Apply hue-rotate only to text elements, never touching avatarFrame */
+.trippyCard .topRow,
+.trippyCard .role,
+.trippyCard .statsList,
+.trippyCard .flavor {
+  animation: trippyHue 0.4s linear infinite;
+}
+
+.trippyCard::before {
+  opacity: 0.95 !important;
+  filter: saturate(8) brightness(1.6) !important;
+  animation: trippyShimmer 0.35s linear infinite !important;
+}
+
+.trippyWrap {
+  animation: trippyPulse 0.3s ease-in-out infinite alternate !important;
+}
+
+@keyframes trippyHue {
+  0%   { filter: saturate(6) hue-rotate(0deg)   brightness(1.2); }
+  100% { filter: saturate(6) hue-rotate(360deg) brightness(1.2); }
+}
+
+@keyframes trippyRotate {
+  from { transform: rotate(0deg)   scale(1.6); opacity: 0.7; }
+  to   { transform: rotate(360deg) scale(1.6); opacity: 1; }
+}
+
+@keyframes trippyShimmer {
+  from { --mx: 0; }
+  to   { --mx: 360; }
+}
+
+@keyframes trippyPulse {
+  from { box-shadow: 0 0 30px 8px rgba(255,0,200,0.5), 0 0 60px rgba(0,200,255,0.3); }
+  to   { box-shadow: 0 0 50px 16px rgba(0,255,128,0.7), 0 0 90px rgba(255,200,0,0.5); }
+}
+
+@keyframes glitchText {
+  0%, 85%, 100% {
+    text-shadow: 0 0 12px rgba(200, 0, 0, 0.8);
+    clip-path: none;
+  }
+  86% {
+    text-shadow: -2px 0 #ff0000, 2px 0 #000, 0 0 12px rgba(200, 0, 0, 0.8);
+    clip-path: inset(10% 0 80% 0);
+  }
+  87% {
+    text-shadow: 2px 0 #cc0000, -2px 0 #ff0000, 0 0 12px rgba(200, 0, 0, 0.8);
+    clip-path: inset(50% 0 30% 0);
+  }
+  88% {
+    text-shadow: 0 0 12px rgba(200, 0, 0, 0.8);
+    clip-path: none;
+  }
+  95% {
+    text-shadow: -3px 0 #ff0000, 3px 0 #800000;
+    clip-path: inset(20% 0 60% 0);
+  }
+  96% { clip-path: none; text-shadow: 0 0 12px rgba(200, 0, 0, 0.8); }
 }

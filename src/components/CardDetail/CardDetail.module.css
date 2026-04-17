@@ -14,6 +14,42 @@
   aspect-ratio: 5 / 7;
   width: 100%;
   display: block;
+  position: relative;
+}
+
+.playable {
+  cursor: pointer;
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: var(--radius-card);
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.playable:hover .playOverlay {
+  opacity: 1;
+}
+
+.playBtn {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #ff4444;
+  text-shadow: 0 0 16px rgba(255, 0, 0, 0.9), 0 0 30px rgba(200, 0, 0, 0.6);
+  border: 1px solid rgba(200, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: rgba(10, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
 }
 
 .details {
@@ -292,4 +328,208 @@
   .statLabel {
     min-width: 110px;
   }
+}
+
+/* Big card glitch — text/buttons only, container untouched */
+.glitching .details {
+  position: relative;
+}
+
+.glitching .details::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 0, 0, 0.015) 1px,
+    rgba(255, 0, 0, 0.015) 2px
+  );
+  animation: scanFlicker 0.4s steps(1) infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.glitching .details .name,
+.glitching .details .role,
+.glitching .details .flavor,
+.glitching .details .bio,
+.glitching .details .sectionTitle,
+.glitching .details .statLabel,
+.glitching .details .moveName,
+.glitching .details .moveDesc,
+.glitching .details .tag {
+  animation: textChannelSplit 0.5s steps(1) infinite;
+}
+
+
+@keyframes textChannelSplit {
+  0%,  80%, 100% { text-shadow: none; }
+  85%            { text-shadow: -1px 0 rgba(255,0,0,0.5), 1px 0 rgba(0,255,255,0.5); }
+  90%            { text-shadow: none; }
+}
+
+@keyframes scanFlicker {
+  0%   { opacity: 0; }
+  50%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+.gameBtn {
+  width: 100%;
+  padding: 14px;
+  background: #0a0000;
+  border: 1px solid rgba(200, 0, 0, 0.6);
+  border-radius: 10px;
+  color: #ff3333;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  text-shadow: 0 0 14px rgba(255, 0, 0, 0.9);
+  box-shadow: 0 0 20px rgba(180, 0, 0, 0.2), inset 0 0 12px rgba(180, 0, 0, 0.08);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+
+.gameBtn:hover {
+  background: rgba(120, 0, 0, 0.25);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.4), inset 0 0 16px rgba(200, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+.gameBtn:active {
+  transform: scale(0.98);
+}
+
+/* Holographic Goth Detail — Amitesh */
+:global([data-slug='amitesh']).wrap {
+  background: linear-gradient(180deg, rgba(12, 0, 0, 0.97), rgba(6, 0, 0, 0.97));
+  border-color: rgba(200, 0, 0, 0.25);
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9), 0 0 60px -20px rgba(180, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  animation: detailGlitch 7s infinite;
+}
+
+:global([data-slug='amitesh']).wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(180, 0, 0, 0.025) 2px,
+    rgba(180, 0, 0, 0.025) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+:global([data-slug='amitesh']).wrap::after {
+  display: none;
+}
+
+:global([data-slug='amitesh']) .details {
+  position: relative;
+  z-index: 2;
+}
+
+:global([data-slug='amitesh']) .cardSlot {
+  position: relative;
+  z-index: 2;
+}
+
+:global([data-slug='amitesh']) .name {
+  color: #ffaaaa;
+  text-shadow: 0 0 16px rgba(200, 0, 0, 0.8);
+}
+
+:global([data-slug='amitesh']) .typePill {
+  background: linear-gradient(135deg, #cc0000, #600000);
+  box-shadow: 0 4px 16px -4px rgba(200, 0, 0, 0.6);
+}
+
+:global([data-slug='amitesh']) .role {
+  color: rgba(255, 120, 120, 0.8);
+}
+
+:global([data-slug='amitesh']) .flavor {
+  color: rgba(255, 100, 100, 0.7);
+  border-left-color: #cc0000;
+}
+
+:global([data-slug='amitesh']) .bio {
+  color: rgba(255, 160, 160, 0.75);
+}
+
+:global([data-slug='amitesh']) .sectionTitle {
+  color: rgba(200, 0, 0, 0.8);
+  text-shadow: 0 0 8px rgba(200, 0, 0, 0.4);
+}
+
+:global([data-slug='amitesh']) .statLabel {
+  color: rgba(255, 140, 140, 0.85);
+}
+
+:global([data-slug='amitesh']) .statBar {
+  background: rgba(100, 0, 0, 0.3);
+}
+
+:global([data-slug='amitesh']) .statFill {
+  background: linear-gradient(90deg, #800000, #ff2200);
+  box-shadow: 0 0 8px rgba(200, 0, 0, 0.6);
+}
+
+:global([data-slug='amitesh']) .statValue {
+  color: #ff6666;
+}
+
+:global([data-slug='amitesh']) .tag {
+  background: rgba(120, 0, 0, 0.2);
+  border-color: rgba(200, 0, 0, 0.3);
+  color: rgba(255, 150, 150, 0.9);
+}
+
+:global([data-slug='amitesh']) .tagDislike {
+  background: rgba(80, 0, 0, 0.3);
+  border-color: rgba(180, 0, 0, 0.4);
+}
+
+:global([data-slug='amitesh']) .move {
+  background: rgba(80, 0, 0, 0.15);
+  border-color: rgba(200, 0, 0, 0.25);
+  animation: moveGlitch 8s infinite;
+}
+
+:global([data-slug='amitesh']) .moveName {
+  color: #ffaaaa;
+}
+
+:global([data-slug='amitesh']) .movePower {
+  background: linear-gradient(135deg, #cc0000, #600000);
+}
+
+:global([data-slug='amitesh']) .moveDesc {
+  color: rgba(255, 120, 120, 0.65);
+}
+
+
+@keyframes detailGlitch {
+  0%, 88%, 100% { border-color: rgba(200, 0, 0, 0.25); transform: none; }
+  89% { transform: translate(-2px, 0); border-color: rgba(255, 0, 0, 0.6); }
+  90% { transform: translate(2px, 1px); border-color: rgba(100, 0, 0, 0.4); }
+  91% { transform: none; }
+  95% { transform: translate(1px, -1px); border-color: rgba(255, 0, 0, 0.5); }
+  96% { transform: none; }
+}
+
+
+@keyframes moveGlitch {
+  0%, 92%, 100% { border-color: rgba(200, 0, 0, 0.25); transform: none; }
+  93% { transform: translateX(-2px); border-color: rgba(255, 0, 0, 0.5); }
+  94% { transform: translateX(2px); }
+  95% { transform: none; }
 }

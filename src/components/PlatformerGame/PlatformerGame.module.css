@@ -1,0 +1,82 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(200, 0, 0, 0.5);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 40px rgba(180, 0, 0, 0.35),
+    0 0 100px rgba(80, 0, 0, 0.2);
+  max-width: 100vw;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #0a0000;
+  border-bottom: 1px solid rgba(200, 0, 0, 0.3);
+  gap: 16px;
+}
+
+.title {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 13px;
+  color: #ff4444;
+  text-shadow: 0 0 10px rgba(200, 0, 0, 0.9);
+  letter-spacing: 0.12em;
+}
+
+.score {
+  font-family: monospace;
+  font-size: 13px;
+  color: #ffaaaa;
+  letter-spacing: 0.06em;
+  flex: 1;
+  text-align: center;
+}
+
+.close {
+  background: none;
+  border: 1px solid rgba(200, 0, 0, 0.4);
+  color: #ff4444;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.close:hover {
+  background: rgba(200, 0, 0, 0.2);
+}
+
+.canvas {
+  display: block;
+  cursor: pointer;
+}
+
+.hint {
+  padding: 8px 16px;
+  background: #0a0000;
+  border-top: 1px solid rgba(200, 0, 0, 0.3);
+  font-family: monospace;
+  font-size: 11px;
+  color: rgba(255, 100, 100, 0.65);
+  text-align: center;
+  letter-spacing: 0.1em;
+}

@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import type { TeamMember } from '../../types/team';
 import { TYPE_LABELS } from '../../types/team';
 import { Card } from '../Card/Card';
 import { MemoryGame } from '../MemoryGame/MemoryGame';
+import { PlatformerGame } from '../PlatformerGame/PlatformerGame';
+import { GlitchText } from '../GlitchText/GlitchText';
 import styles from './CardDetail.module.css';
 
 interface CardDetailProps {
@@ -12,6 +14,8 @@ interface CardDetailProps {
 
 export function CardDetail({ member }: CardDetailProps) {
   const [gameOpen, setGameOpen] = useState(false);
+  const [platformerOpen, setPlatformerOpen] = useState(false);
+  const [glitching, setGlitching] = useState(false);
   const { links } = member;
   const linkEntries: Array<[string, string]> = [];
   if (links.linkedin) linkEntries.push(['LinkedIn', links.linkedin]);
@@ -20,36 +24,69 @@ export function CardDetail({ member }: CardDetailProps) {
   if (links.email) linkEntries.push(['Email', `mailto:${links.email}`]);
   if (links.slack) linkEntries.push([`Slack (${links.slack})`, '#']);
 
+  const handleAvatarHoverChange = useCallback((hovered: boolean) => {
+    if (member.slug === 'amitesh') setGlitching(hovered);
+  }, [member.slug]);
+
+  const g = glitching && member.slug === 'amitesh';
+
   return (
     <motion.div
-      className={styles.wrap}
+      className={`${styles.wrap} ${g ? styles.glitching : ''}`}
       data-type={member.type}
+      data-slug={member.slug}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
     >
       <div className={styles.cardSlot}>
-        <Card member={member} onOpen={() => { /* already open */ }} />
+        <Card
+          member={member}
+          onOpen={() => { /* already open */ }}
+          onAvatarHoverChange={handleAvatarHoverChange}
+          disableTrippy
+        />
       </div>
+
+      {platformerOpen && (
+        <PlatformerGame
+          onClose={() => setPlatformerOpen(false)}
+          avatarSrc={member.avatar}
+        />
+      )}
 
       <div className={styles.details}>
         <div>
           <div className={styles.header}>
-            <h2 className={styles.name}>{member.name}</h2>
-            <span className={styles.typePill}>{TYPE_LABELS[member.type]}</span>
+            <h2 className={styles.name}>
+              <GlitchText text={member.name} active={g} speed={200} />
+            </h2>
+            <span className={styles.typePill}>
+              <GlitchText text={TYPE_LABELS[member.type]} active={g} speed={300} />
+            </span>
           </div>
-          <p className={styles.role}>{member.role}</p>
+          <p className={styles.role}>
+            <GlitchText text={member.role} active={g} speed={250} />
+          </p>
         </div>
 
-        <p className={styles.flavor}>"{member.flavor}"</p>
-        <p className={styles.bio}>{member.bio}</p>
+        <p className={styles.flavor}>
+          "<GlitchText text={member.flavor} active={g} speed={220} />"
+        </p>
+        <p className={styles.bio}>
+          <GlitchText text={member.bio} active={g} speed={270} />
+        </p>
 
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Stats</h3>
+          <h3 className={styles.sectionTitle}>
+            <GlitchText text="Stats" active={g} speed={300} />
+          </h3>
           {member.stats.map((stat) => (
             <div key={stat.label} className={styles.statRow}>
-              <span className={styles.statLabel}>{stat.label}</span>
+              <span className={styles.statLabel}>
+                <GlitchText text={stat.label} active={g} speed={250} />
+              </span>
               <div className={styles.statBar}>
                 <div
                   className={styles.statFill}
@@ -63,19 +100,25 @@ export function CardDetail({ member }: CardDetailProps) {
 
         <div className={styles.twoCol}>
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Likes</h3>
+            <h3 className={styles.sectionTitle}>
+              <GlitchText text="Likes" active={g} speed={300} />
+            </h3>
             <ul className={styles.tagList}>
               {member.likes.map((item) => (
-                <li key={item} className={styles.tag}>{item}</li>
+                <li key={item} className={styles.tag}>
+                  <GlitchText text={item} active={g} speed={250} />
+                </li>
               ))}
             </ul>
           </div>
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Dislikes</h3>
+            <h3 className={styles.sectionTitle}>
+              <GlitchText text="Dislikes" active={g} speed={300} />
+            </h3>
             <ul className={styles.tagList}>
               {member.dislikes.map((item) => (
                 <li key={item} className={`${styles.tag} ${styles.tagDislike}`}>
-                  {item}
+                  <GlitchText text={item} active={g} speed={250} />
                 </li>
               ))}
             </ul>
@@ -84,17 +127,23 @@ export function CardDetail({ member }: CardDetailProps) {
 
         {member.moves && member.moves.length > 0 && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Signature Moves</h3>
+            <h3 className={styles.sectionTitle}>
+              <GlitchText text="Signature Moves" active={g} speed={300} />
+            </h3>
             <div className={styles.moves}>
               {member.moves.map((move) => (
                 <div key={move.name} className={styles.move}>
                   <div className={styles.moveHeader}>
-                    <span className={styles.moveName}>{move.name}</span>
+                    <span className={styles.moveName}>
+                      <GlitchText text={move.name} active={g} speed={200} />
+                    </span>
                     {move.power !== undefined && (
                       <span className={styles.movePower}>{move.power}</span>
                     )}
                   </div>
-                  <p className={styles.moveDesc}>{move.description}</p>
+                  <p className={styles.moveDesc}>
+                    <GlitchText text={move.description} active={g} speed={250} />
+                  </p>
                 </div>
               ))}
             </div>
@@ -103,7 +152,9 @@ export function CardDetail({ member }: CardDetailProps) {
 
         {linkEntries.length > 0 && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Where to find</h3>
+            <h3 className={styles.sectionTitle}>
+              <GlitchText text="Where to find" active={g} speed={300} />
+            </h3>
             <div className={styles.links}>
               {linkEntries.map(([label, href]) => (
                 <a
@@ -113,10 +164,18 @@ export function CardDetail({ member }: CardDetailProps) {
                   target={href.startsWith('http') ? '_blank' : undefined}
                   rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 >
-                  {label}
+                  <GlitchText text={label} active={g} speed={250} />
                 </a>
               ))}
             </div>
+          </div>
+        )}
+
+        {member.slug === 'amitesh' && (
+          <div className={styles.section}>
+            <button className={styles.gameBtn} onClick={() => setPlatformerOpen(true)}>
+              <GlitchText text="GAME" active={g} speed={175} />
+            </button>
           </div>
         )}
 
@@ -124,10 +183,7 @@ export function CardDetail({ member }: CardDetailProps) {
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>Mini game</h3>
             {!gameOpen ? (
-              <button
-                className={styles.gameTeaser}
-                onClick={() => setGameOpen(true)}
-              >
+              <button className={styles.gameTeaser} onClick={() => setGameOpen(true)}>
                 <span className={styles.gameTeaserIcon}>🎮</span>
                 <span>
                   <strong>Match the Pokémon</strong>
