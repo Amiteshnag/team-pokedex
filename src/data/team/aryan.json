@@ -1,0 +1,22 @@
+{
+  "slug": "aryan",
+  "name": "Aryan",
+  "avatar": "/avatars/aryan.png",
+  "role": "Team Member",
+  "type": "dragon",
+  "hp": 120,
+  "flavor": "Thinks big, moves bigger.",
+  "bio": "Placeholder card — Aryan, edit this file to add your bio, role, likes/dislikes, and links.",
+  "likes": ["Big ideas", "Deep dives", "Good chai"],
+  "dislikes": ["Vague briefs", "Slow Wi-Fi"],
+  "stats": [
+    { "label": "Vision Range", "value": 90 },
+    { "label": "Execution Speed", "value": 80 },
+    { "label": "Prompt-Fu", "value": 78 },
+    { "label": "Meeting Stamina", "value": 70 }
+  ],
+  "moves": [
+    { "name": "Dragon Pitch", "description": "Presents an idea so compelling the room forgets to push back.", "power": 90 }
+  ],
+  "links": {}
+}
