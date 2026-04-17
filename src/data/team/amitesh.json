@@ -2,21 +2,20 @@
   "slug": "amitesh",
   "name": "Amitesh",
   "avatar": "/avatars/amitesh.png",
-  "role": "Team Member",
-  "type": "steel",
-  "hp": 125,
-  "flavor": "Reliable as a Pokémon Center — always there when you need it.",
-  "bio": "Placeholder card — Amitesh, edit this file to add your bio, role, likes/dislikes, and links.",
-  "likes": ["Clean systems", "Solid docs", "First-principles thinking"],
-  "dislikes": ["Tech debt", "Ambiguous requirements"],
+  "role": "Designer",
+  "type": "fairy",
+  "hp": 100,
+  "flavor": "Unflavoured.",
+  "bio": "At the end of the day it's night.",
+  "likes": ["Gaming", "Cooking", "Riding bike"],
+  "dislikes": ["Sleeping early"],
   "stats": [
-    { "label": "Reliability", "value": 95 },
-    { "label": "Problem Solving", "value": 85 },
-    { "label": "Prompt-Fu", "value": 80 },
-    { "label": "Chill Factor", "value": 88 }
+    { "label": "Gaming", "value": 90 },
+    { "label": "Cooking", "value": 70 },
+    { "label": "Riding Bike", "value": 100 }
   ],
   "moves": [
-    { "name": "Iron Analysis", "description": "Breaks down any problem into its load-bearing parts.", "power": 88 }
+    { "name": "Super Speed", "description": "Lightning fast, 160kmph.", "power": 100 }
   ],
   "links": {}
 }
