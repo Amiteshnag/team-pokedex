@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import type { TeamMember } from '../../types/team';
 import { TYPE_LABELS } from '../../types/team';
 import { Card } from '../Card/Card';
+import { MemoryGame } from '../MemoryGame/MemoryGame';
 import styles from './CardDetail.module.css';
 
 interface CardDetailProps {
@@ -9,6 +11,7 @@ interface CardDetailProps {
 }
 
 export function CardDetail({ member }: CardDetailProps) {
+  const [gameOpen, setGameOpen] = useState(false);
   const { links } = member;
   const linkEntries: Array<[string, string]> = [];
   if (links.linkedin) linkEntries.push(['LinkedIn', links.linkedin]);
@@ -114,6 +117,27 @@ export function CardDetail({ member }: CardDetailProps) {
                 </a>
               ))}
             </div>
+          </div>
+        )}
+
+        {member.game === 'memory' && (
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Mini game</h3>
+            {!gameOpen ? (
+              <button
+                className={styles.gameTeaser}
+                onClick={() => setGameOpen(true)}
+              >
+                <span className={styles.gameTeaserIcon}>🎮</span>
+                <span>
+                  <strong>Match the Pokémon</strong>
+                  <span className={styles.gameTeaserSub}>Win to unlock my contact</span>
+                </span>
+                <span className={styles.gameTeaserArrow}>›</span>
+              </button>
+            ) : (
+              <MemoryGame links={member.links} memberName={member.name} />
+            )}
           </div>
         )}
       </div>

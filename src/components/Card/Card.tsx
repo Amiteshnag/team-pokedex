@@ -7,9 +7,10 @@ import styles from './Card.module.css';
 interface CardProps {
   member: TeamMember;
   onOpen: (slug: string) => void;
+  onHoverSound?: () => void;
 }
 
-export function Card({ member, onOpen }: CardProps) {
+export function Card({ member, onOpen, onHoverSound }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
   const [avatarFailed, setAvatarFailed] = useState(false);
@@ -64,6 +65,7 @@ export function Card({ member, onOpen }: CardProps) {
         className={styles.card}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onMouseEnter={onHoverSound}
       >
         <div className={styles.frame}>
           <div className={styles.topRow}>

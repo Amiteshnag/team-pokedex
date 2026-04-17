@@ -56,4 +56,5 @@ export interface TeamMember {
   stats: TeamStat[];
   moves?: TeamMove[];
   links: TeamLinks;
+  game?: 'memory';
 }

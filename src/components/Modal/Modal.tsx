@@ -5,13 +5,17 @@ import styles from './Modal.module.css';
 
 interface ModalProps {
   onClose: () => void;
+  onCloseSound?: () => void;
   children: React.ReactNode;
 }
 
-export function Modal({ onClose, children }: ModalProps) {
+export function Modal({ onClose, onCloseSound, children }: ModalProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onCloseSound?.();
+        onClose();
+      }
     };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
@@ -27,7 +31,7 @@ export function Modal({ onClose, children }: ModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      onClick={onClose}
+      onClick={() => { onCloseSound?.(); onClose(); }}
       role="dialog"
       aria-modal="true"
     >
@@ -36,7 +40,7 @@ export function Modal({ onClose, children }: ModalProps) {
       </div>
       <button
         className={styles.close}
-        onClick={onClose}
+        onClick={() => { onCloseSound?.(); onClose(); }}
         aria-label="Close"
         type="button"
       >

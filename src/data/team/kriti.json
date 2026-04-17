@@ -4,31 +4,32 @@
   "avatar": "/avatars/kriti.png",
   "role": "AI PM Workshop Lead",
   "type": "psychic",
-  "hp": 120,
-  "flavor": "Turns ambiguous briefs into shipped roadmaps.",
-  "bio": "PM at Yulu. Leads the AI PM workshop series and partners with Akshay (HoP) on AI-augmented product workflows.",
-  "likes": ["Fast feedback loops", "Lenny's podcast", "Good chai", "Clean specs"],
-  "dislikes": ["Vague briefs", "Meetings without agendas", "Scope creep"],
+  "hp": 130,
+  "flavor": "Decides fast, ships faster, eats everything in between.",
+  "bio": "PM at Yulu who'd rather build it than debate it. Equal parts sneakerhead, foodie, and shipper. Leads the AI PM Workshop and believes the best spec is a working prototype.",
+  "likes": ["Movies", "Sneakers", "Travel", "Street food", "Building things", "Making decisions"],
+  "dislikes": ["Circular discussions", "Unclear timelines", "Beating around the bush"],
   "stats": [
-    { "label": "Caffeine Level", "value": 85 },
-    { "label": "Deadline Resistance", "value": 90 },
-    { "label": "Prompt-Fu", "value": 95 },
-    { "label": "Stakeholder Charm", "value": 80 }
+    { "label": "Move Fast", "value": 95 },
+    { "label": "Build Energy", "value": 90 },
+    { "label": "Foodie Level", "value": 88 },
+    { "label": "Sneaker Game", "value": 85 }
   ],
   "moves": [
     {
-      "name": "Roadmap Slash",
-      "description": "Cuts through scope creep and aligns stakeholders.",
-      "power": 90
+      "name": "Decisive Strike",
+      "description": "Ends the loop and locks the call. No more 'let's circle back.'",
+      "power": 95
     },
     {
-      "name": "Spec Beam",
-      "description": "Turns a fuzzy idea into a crisp PRD.",
-      "power": 70
+      "name": "Ship Sprint",
+      "description": "Goes from idea to live product before the meeting ends.",
+      "power": 85
     }
   ],
   "links": {
     "linkedin": "https://linkedin.com/in/",
     "email": "navtheunstoppable@gmail.com"
-  }
+  },
+  "game": "memory"
 }

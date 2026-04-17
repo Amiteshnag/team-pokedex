@@ -224,6 +224,55 @@
   border-color: var(--type-a);
 }
 
+.gameTeaser {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.gameTeaser:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--type-a);
+}
+
+.gameTeaserIcon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.gameTeaser > span:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.gameTeaser strong {
+  color: var(--text-0);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gameTeaserSub {
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.gameTeaserArrow {
+  color: var(--text-2);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .wrap {
     grid-template-columns: 1fr;

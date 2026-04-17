@@ -5,13 +5,14 @@ import styles from './CardGrid.module.css';
 interface CardGridProps {
   members: TeamMember[];
   onOpen: (slug: string) => void;
+  onHoverSound?: () => void;
 }
 
-export function CardGrid({ members, onOpen }: CardGridProps) {
+export function CardGrid({ members, onOpen, onHoverSound }: CardGridProps) {
   return (
     <div className={styles.grid}>
       {members.map((m) => (
-        <Card key={m.slug} member={m} onOpen={onOpen} />
+        <Card key={m.slug} member={m} onOpen={onOpen} onHoverSound={onHoverSound} />
       ))}
     </div>
   );
