@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { TeamMember } from '../../types/team';
 import { TYPE_LABELS } from '../../types/team';
@@ -14,8 +14,14 @@ interface CardProps {
 
 export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disableTrippy }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
   const hoverVideoRef = useRef<HTMLVideoElement>(null);
+  const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const beatRafRef = useRef<number | null>(null);
+  const decayRafRef = useRef<number | null>(null);
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [trippy, setTrippy] = useState(false);
   const [avatarHovered, setAvatarHovered] = useState(false);
@@ -58,9 +64,87 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     onAvatarHoverChange?.(true);
     const vid = hoverVideoRef.current;
     if (vid) { vid.currentTime = 0; vid.play().catch(() => {}); }
-    if (member.slug === 'amitesh') {
-      hpIntervalRef.current = setInterval(() => setHp(v => v + 1), 80);
+    if (!hoverAudioRef.current) {
+      hoverAudioRef.current = new Audio('/hover.mp3');
     }
+    hoverAudioRef.current.play().catch(() => {});
+
+    if (!audioCtxRef.current) {
+      const ctx = new AudioContext();
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.4;
+      const source = ctx.createMediaElementSource(hoverAudioRef.current);
+      source.connect(analyser);
+      analyser.connect(ctx.destination);
+      audioCtxRef.current = ctx;
+      analyserRef.current = analyser;
+    } else {
+      audioCtxRef.current.resume().catch(() => {});
+    }
+
+    const dataArray = new Uint8Array(analyserRef.current!.frequencyBinCount);
+    const bassEnd = Math.max(1, Math.floor(dataArray.length * 0.08));
+    const energyHistory: number[] = [];
+    let lastBeatTime = 0;
+
+    const applyBeat = (v: number) => {
+      const card = cardRef.current;
+      const frame = frameRef.current;
+      // CSS var for ::before / ::after pseudo-elements
+      const s = v.toFixed(3);
+      card?.style.setProperty('--beat', s);
+      frame?.style.setProperty('--beat', s);
+      if (v > 0.01) {
+        const glow = Math.round(60 + v * 160);
+        card?.style.setProperty('box-shadow',
+          `0 0 0 ${(v * 3).toFixed(1)}px rgba(255,0,0,${v.toFixed(2)}) inset,` +
+          `0 20px 60px -20px rgba(0,0,0,0.95),` +
+          `0 0 ${glow}px -5px rgba(255,0,0,${(0.4 + v * 0.6).toFixed(2)})`
+        );
+        card?.style.setProperty('filter', `brightness(${(1 + v * 0.5).toFixed(2)})`);
+        frame?.style.setProperty('border-color', `rgba(255,0,0,${(0.3 + v * 0.7).toFixed(2)})`);
+        frame?.style.setProperty('box-shadow', `inset 0 0 ${Math.round(v * 30)}px rgba(255,0,0,${(v * 0.6).toFixed(2)})`);
+      } else {
+        card?.style.removeProperty('box-shadow');
+        card?.style.removeProperty('filter');
+        frame?.style.removeProperty('border-color');
+        frame?.style.removeProperty('box-shadow');
+        card?.style.removeProperty('--beat');
+        frame?.style.removeProperty('--beat');
+      }
+    };
+
+    const startDecay = () => {
+      const decay = () => {
+        const cur = parseFloat(cardRef.current?.style.getPropertyValue('--beat') ?? '0');
+        if (cur < 0.01) { applyBeat(0); decayRafRef.current = null; return; }
+        applyBeat(cur * 0.80);
+        decayRafRef.current = requestAnimationFrame(decay);
+      };
+      decayRafRef.current = requestAnimationFrame(decay);
+    };
+
+    const tick = () => {
+      analyserRef.current!.getByteFrequencyData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < bassEnd; i++) sum += dataArray[i];
+      const energy = sum / bassEnd / 255;
+      energyHistory.push(energy);
+      if (energyHistory.length > 18) energyHistory.shift();
+      const avg = energyHistory.reduce((a, b) => a + b, 0) / energyHistory.length;
+      const now = performance.now();
+      if (energy > avg * 1.3 && energy > 0.04 && now - lastBeatTime > 140) {
+        lastBeatTime = now;
+        if (decayRafRef.current) { cancelAnimationFrame(decayRafRef.current); decayRafRef.current = null; }
+        applyBeat(1);
+        setTimeout(startDecay, 70);
+      }
+      beatRafRef.current = requestAnimationFrame(tick);
+    };
+    beatRafRef.current = requestAnimationFrame(tick);
+
+    hpIntervalRef.current = setInterval(() => setHp(v => v + 1), 80);
   }, [member.slug, disableTrippy, onAvatarHoverChange]);
 
   const handleAvatarLeave = useCallback(() => {
@@ -70,6 +154,15 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     onAvatarHoverChange?.(false);
     const vid = hoverVideoRef.current;
     if (vid) { vid.pause(); vid.currentTime = 0; }
+    hoverAudioRef.current?.pause();
+    if (beatRafRef.current) { cancelAnimationFrame(beatRafRef.current); beatRafRef.current = null; }
+    if (decayRafRef.current) { cancelAnimationFrame(decayRafRef.current); decayRafRef.current = null; }
+    cardRef.current?.style.removeProperty('box-shadow');
+    cardRef.current?.style.removeProperty('filter');
+    cardRef.current?.style.removeProperty('--beat');
+    frameRef.current?.style.removeProperty('border-color');
+    frameRef.current?.style.removeProperty('box-shadow');
+    frameRef.current?.style.removeProperty('--beat');
     if (hpIntervalRef.current) { clearInterval(hpIntervalRef.current); hpIntervalRef.current = null; }
     setHp(member.hp);
   }, [member.slug, disableTrippy, onAvatarHoverChange]);
@@ -101,7 +194,7 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
         {trippy && <div className={styles.trippyOverlay} />}
         {trippy && <div className={styles.grainOverlay} />}
 
-        <div className={styles.frame}>
+        <div ref={frameRef} className={styles.frame}>
           <div className={styles.topRow}>
             <span className={styles.name}>{member.name}</span>
             <span className={styles.hp}>

@@ -322,6 +322,12 @@
   inherits: true;
 }
 
+@property --beat {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: true;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card {
     transform: none !important;
@@ -355,8 +361,8 @@
     #0d0000 87%,
     #ff0000 100%
   );
-  filter: saturate(2.5) brightness(0.9);
-  opacity: 0.45;
+  filter: saturate(calc(2.5 + var(--beat) * 6)) brightness(calc(0.9 + var(--beat) * 1.2));
+  opacity: calc(0.45 + var(--beat) * 0.5);
   animation: gothShimmer 6s linear infinite;
 }
 
@@ -407,7 +413,7 @@
     rgba(255, 160, 60, 1) 85%,
     rgba(255, 220, 120, 1) 100%
   );
-  box-shadow: 0 0 6px rgba(255, 0, 0, 0.7), 0 0 14px rgba(255, 60, 0, 0.4);
+  box-shadow: 0 0 calc(6px + var(--beat) * 14px) rgba(255, 0, 0, 0.7), 0 0 calc(14px + var(--beat) * 20px) rgba(255, 60, 0, 0.4);
   animation: scanline 4s linear infinite;
   pointer-events: none;
   z-index: 11;
@@ -500,6 +506,7 @@
   );
   mix-blend-mode: screen;
   animation: trippyRotate 0.5s linear infinite;
+  opacity: calc(0.7 + var(--beat) * 0.3);
   pointer-events: none;
   z-index: 1;
   border-radius: var(--radius-card);
