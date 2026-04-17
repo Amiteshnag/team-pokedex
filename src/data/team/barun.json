@@ -2,21 +2,21 @@
   "slug": "barun",
   "name": "Barun",
   "avatar": "/avatars/barun.png",
-  "role": "Researcher",
-  "type": "water",
-  "hp": 100,
-  "flavor": "Follows the user, wherever they flow.",
-  "bio": "Placeholder card — Barun, edit this file to add your bio, role, likes/dislikes, and links.",
-  "likes": ["Raw transcripts", "Affinity diagrams", "Curious questions"],
-  "dislikes": ["Leading questions", "Assumptions without data"],
+  "role": "Shadow Architect",
+  "type": "ghost",
+  "hp": 128,
+  "flavor": "Wanders the void between ideas, building what shouldn't exist.",
+  "bio": "Dwells at the intersection of design and AI — mapping invisible systems, forging clarity from chaos. Known for pulling insight from the darkest corners of any problem and making the whole room see what wasn't there before.",
+  "likes": ["Deep rabbit holes", "Connecting dots others miss", "Building in the dark"],
+  "dislikes": ["Surface-level answers", "Closed systems", "Assumptions without evidence"],
   "stats": [
-    { "label": "Caffeine Level", "value": 55 },
-    { "label": "Deadline Resistance", "value": 85 },
-    { "label": "Prompt-Fu", "value": 75 },
-    { "label": "Stakeholder Charm", "value": 80 }
+    { "label": "Gluttony", "value": 92 },
+    { "label": "Observation Haki", "value": 88 },
+    { "label": "Void Sync", "value": 85 },
+    { "label": "Curiosity Drive", "value": 95 }
   ],
   "moves": [
-    { "name": "Insight Wave", "description": "Surfaces the unstated need.", "power": 85 }
+    { "name": "Bankai: Star Forge", "description": "Unleashes full focus — collapses scattered signals into a constellation of clarity no one else could map.", "power": 98 }
   ],
   "links": {}
 }

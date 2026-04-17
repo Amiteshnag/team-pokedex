@@ -5,7 +5,7 @@ import styles from './CardGrid.module.css';
 interface CardGridProps {
   members: TeamMember[];
   onOpen: (slug: string) => void;
-  onHoverSound?: () => void;
+  onHoverSound?: (slug: string) => void;
 }
 
 export function CardGrid({ members, onOpen, onHoverSound }: CardGridProps) {
