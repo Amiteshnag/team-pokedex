@@ -57,9 +57,9 @@
   --type-glow: rgba(155, 124, 255, 0.5);
 }
 [data-type='ghost'] {
-  --type-a: #a58cff;
-  --type-b: #4b2ea0;
-  --type-glow: rgba(165, 140, 255, 0.45);
+  --type-a: #1a0033;
+  --type-b: #060008;
+  --type-glow: rgba(218, 165, 32, 0.7);
 }
 [data-type='steel'] {
   --type-a: #b8c3d4;
