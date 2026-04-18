@@ -401,6 +401,7 @@
   animation: scanlines 8s linear infinite;
 }
 
+
 :global([data-slug='amitesh']) .frame::after {
   content: '';
   position: absolute;
@@ -413,7 +414,7 @@
     rgba(255, 160, 60, 1) 85%,
     rgba(255, 220, 120, 1) 100%
   );
-  box-shadow: 0 0 calc(6px + var(--beat) * 14px) rgba(255, 0, 0, 0.7), 0 0 calc(14px + var(--beat) * 20px) rgba(255, 60, 0, 0.4);
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.7), 0 0 14px rgba(255, 60, 0, 0.4);
   animation: scanline 4s linear infinite;
   pointer-events: none;
   z-index: 11;

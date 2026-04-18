@@ -162,6 +162,7 @@ class ChiptunePlayer {
   private noteIndex = 0;
   private nextNoteTime = 0;
   private masterGain: GainNode | null = null;
+  analyser: AnalyserNode | null = null;
   started = false;
 
   startOnce() {
@@ -170,7 +171,11 @@ class ChiptunePlayer {
     const ac = getCtx();
     this.masterGain = ac.createGain();
     this.masterGain.gain.setValueAtTime(0.035, ac.currentTime);
-    this.masterGain.connect(ac.destination);
+    this.analyser = ac.createAnalyser();
+    this.analyser.fftSize = 1024;
+    this.analyser.smoothingTimeConstant = 0.8;
+    this.masterGain.connect(this.analyser);
+    this.analyser.connect(ac.destination);
     this.nextNoteTime = ac.currentTime + 0.5;
     this.tick();
   }
@@ -208,6 +213,10 @@ class ChiptunePlayer {
 }
 
 const bgm = new ChiptunePlayer();
+
+export function getBgmAnalyser(): AnalyserNode | null {
+  return bgm.analyser;
+}
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
 

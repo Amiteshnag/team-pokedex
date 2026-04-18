@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { TeamMember } from '../../types/team';
 import { TYPE_LABELS } from '../../types/team';
@@ -9,10 +9,11 @@ interface CardProps {
   onOpen: (slug: string) => void;
   onHoverSound?: (slug: string) => void;
   onAvatarHoverChange?: (hovered: boolean) => void;
+  onAnalyserReady?: (analyser: AnalyserNode | null) => void;
   disableTrippy?: boolean;
 }
 
-export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disableTrippy }: CardProps) {
+export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, onAnalyserReady, disableTrippy }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
@@ -66,14 +67,15 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     if (vid) { vid.currentTime = 0; vid.play().catch(() => {}); }
     if (!hoverAudioRef.current) {
       hoverAudioRef.current = new Audio('/hover.mp3');
+      hoverAudioRef.current.loop = true;
     }
     hoverAudioRef.current.play().catch(() => {});
 
     if (!audioCtxRef.current) {
       const ctx = new AudioContext();
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 128;
-      analyser.smoothingTimeConstant = 0.4;
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.5;
       const source = ctx.createMediaElementSource(hoverAudioRef.current);
       source.connect(analyser);
       analyser.connect(ctx.destination);
@@ -82,16 +84,16 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     } else {
       audioCtxRef.current.resume().catch(() => {});
     }
+    onAnalyserReady?.(analyserRef.current);
 
     const dataArray = new Uint8Array(analyserRef.current!.frequencyBinCount);
-    const bassEnd = Math.max(1, Math.floor(dataArray.length * 0.08));
+    const bassEnd = 10;
     const energyHistory: number[] = [];
     let lastBeatTime = 0;
 
     const applyBeat = (v: number) => {
       const card = cardRef.current;
       const frame = frameRef.current;
-      // CSS var for ::before / ::after pseudo-elements
       const s = v.toFixed(3);
       card?.style.setProperty('--beat', s);
       frame?.style.setProperty('--beat', s);
@@ -134,7 +136,7 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
       if (energyHistory.length > 18) energyHistory.shift();
       const avg = energyHistory.reduce((a, b) => a + b, 0) / energyHistory.length;
       const now = performance.now();
-      if (energy > avg * 1.3 && energy > 0.04 && now - lastBeatTime > 140) {
+      if (energy > avg * 1.6 && energy > 0.08 && now - lastBeatTime > 250) {
         lastBeatTime = now;
         if (decayRafRef.current) { cancelAnimationFrame(decayRafRef.current); decayRafRef.current = null; }
         applyBeat(1);
@@ -145,7 +147,7 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     beatRafRef.current = requestAnimationFrame(tick);
 
     hpIntervalRef.current = setInterval(() => setHp(v => v + 1), 80);
-  }, [member.slug, disableTrippy, onAvatarHoverChange]);
+  }, [member.slug, disableTrippy, onAvatarHoverChange, onAnalyserReady]);
 
   const handleAvatarLeave = useCallback(() => {
     if (member.slug !== 'amitesh') return;
@@ -155,6 +157,7 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     const vid = hoverVideoRef.current;
     if (vid) { vid.pause(); vid.currentTime = 0; }
     hoverAudioRef.current?.pause();
+    onAnalyserReady?.(null);
     if (beatRafRef.current) { cancelAnimationFrame(beatRafRef.current); beatRafRef.current = null; }
     if (decayRafRef.current) { cancelAnimationFrame(decayRafRef.current); decayRafRef.current = null; }
     cardRef.current?.style.removeProperty('box-shadow');
@@ -165,7 +168,7 @@ export function Card({ member, onOpen, onHoverSound, onAvatarHoverChange, disabl
     frameRef.current?.style.removeProperty('--beat');
     if (hpIntervalRef.current) { clearInterval(hpIntervalRef.current); hpIntervalRef.current = null; }
     setHp(member.hp);
-  }, [member.slug, disableTrippy, onAvatarHoverChange]);
+  }, [member.slug, disableTrippy, onAvatarHoverChange, onAnalyserReady]);
 
   const initials = member.name
     .split(' ')

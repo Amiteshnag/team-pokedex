@@ -10,9 +10,9 @@
   "likes": ["Gaming", "Cooking", "Riding bike"],
   "dislikes": ["Sleeping early"],
   "stats": [
-    { "label": "Gaming", "value": 90 },
-    { "label": "Cooking", "value": 70 },
-    { "label": "Riding Bike", "value": 100 }
+    { "label": "Gaming", "value": 33 },
+    { "label": "Cooking", "value": 50 },
+    { "label": "Riding Bike", "value": 60 }
   ],
   "moves": [
     { "name": "Super Speed", "description": "Lightning fast, 160kmph.", "power": 100 }
