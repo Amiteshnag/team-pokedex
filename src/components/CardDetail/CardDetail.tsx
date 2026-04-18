@@ -44,6 +44,7 @@ export function CardDetail({ member }: CardDetailProps) {
   if (links.slack) linkEntries.push([`Slack (${links.slack})`, '#']);
 
   const statFillRefs = useRef<Array<HTMLDivElement | null>>(Array(member.stats.length).fill(null));
+  const statValueRefs = useRef<Array<HTMLSpanElement | null>>(Array(member.stats.length).fill(null));
   // translateY/glow refs for key containers
   const nameRef  = useRef<HTMLHeadingElement>(null);
   const roleRef  = useRef<HTMLParagraphElement>(null);
@@ -65,6 +66,9 @@ export function CardDetail({ member }: CardDetailProps) {
         el.style.width = `${baseWidths[i]}%`;
         el.style.filter = '';
         el.style.boxShadow = '';
+      });
+      statValueRefs.current.forEach((el, i) => {
+        if (el) el.textContent = String(member.stats[i].value);
       });
       domRefs.forEach(r => {
         if (!r.current) return;
@@ -95,9 +99,12 @@ export function CardDetail({ member }: CardDetailProps) {
         if (!el) return;
         const energy = bandEnergiesRef.current[statBands[i] ?? B_MID];
         const base = baseWidths[i];
-        el.style.width = `${Math.min(100, base + energy * 55).toFixed(1)}%`;
+        const currentWidth = Math.min(100, base + energy * 55);
+        el.style.width = `${currentWidth.toFixed(1)}%`;
         el.style.filter = `brightness(${(1 + energy * 1.5).toFixed(2)}) saturate(${(1 + energy * 2).toFixed(2)})`;
         el.style.boxShadow = energy > 0.1 ? `0 0 ${Math.round(energy * 20)}px rgba(255,255,255,${(energy * 0.7).toFixed(2)})` : '';
+        const valEl = statValueRefs.current[i];
+        if (valEl) valEl.textContent = String(Math.round(currentWidth));
       });
 
       // Main text containers — translateY + glow
@@ -182,7 +189,7 @@ export function CardDetail({ member }: CardDetailProps) {
                   style={{ width: `${Math.max(0, Math.min(100, stat.value))}%` }}
                 />
               </div>
-              <span className={styles.statValue}>{stat.value}</span>
+              <span className={styles.statValue} ref={(el) => { statValueRefs.current[i] = el; }}>{stat.value}</span>
             </div>
           ))}
         </div>
